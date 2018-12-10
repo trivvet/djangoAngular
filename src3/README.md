@@ -1,2 +1,0 @@
-# tryAngular
-Only for learning
