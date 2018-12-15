@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
+from django.db.utils import OperationalError
 from django.urls import reverse
 
 from rest_framework.serializers import (
@@ -14,8 +15,13 @@ from ..models import Comment
 
 User = get_user_model()
 
+try:
+    user_for_comment = User.objects.all().first()
+except OperationalError:
+    user_for_comment = None
+
 def create_comment_serializer(type='post', 
-    slug=None, parent_id=None, user=User.objects.all().first()):
+    slug=None, parent_id=None, user=user_for_comment):
     class CommentCreateSerializer(ModelSerializer):
         class Meta:
             model = Comment
