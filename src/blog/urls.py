@@ -22,6 +22,8 @@ from django.views.generic.base import TemplateView
 
 from rest_framework_jwt.views import obtain_jwt_token
 
+from ang.views import AngularTemplateView
+
 urlpatterns = [
     
     url(r'^admin/', admin.site.urls),
@@ -32,6 +34,8 @@ urlpatterns = [
     url(r'^api/accounts/', include('accounts.api.urls',
         namespace="accounts-api")),
     url(r'^api/auth/token/', obtain_jwt_token),
+    url(r'^api/templates/(?P<item>[A-Za-z0-9\-\_\.\/]+)\.html$', 
+        AngularTemplateView.as_view()),
 ]
 
 if settings.DEBUG:
@@ -41,5 +45,5 @@ if settings.DEBUG:
         document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [
-    url(r'^$', TemplateView.as_view(template_name="ang/home.html")),
+    url(r'^', TemplateView.as_view(template_name="ang/home.html")),
 ]

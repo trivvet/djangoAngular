@@ -1,0 +1,18 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+    <div class="container">
+        <a class="navbar-brand" ng-href="/">Blog Project</a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" ng-href="/">Blogs</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" ng-href="/about">About</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" ng-submit="searchItem()">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" ng-model="blogFilter" uib-typeahead="state.title for state in getElements | filter:$viewValue | limitTo:8"
+            typeahead-on-select="selectItem($item, $model, $label)">
+            <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>

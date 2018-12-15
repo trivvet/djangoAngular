@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col">
+        <h1 class='new'>
+            {{ post.title }}
+        </h1>
+        <p>{{ post.publishedDate }}</p>
+    </div>
+</div>
+
+<div class="row" ng-if="post.image">
+    <div class="col">
+        <img class="rounded mx-auto d-block" height="400px" src="{{ post.image }}" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <p class="description">{{ post.description }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <h3 ng-show="commentsExist">Comments:</h3>
+        <h4 ng-hide="commentsExist">Comments have not been created yet</h4>
+        <ul class="list-group">
+            <input type="text" ng-model="query" ng-show="commentsExist"placeholder="Filter Comments" />
+            <li class="list-group-item" ng-repeat="comment in post.comments | filter: query">{{ comment.text }}<button type="button" class="btn btn-danger btn-sm float-right" confirm-click confirmed-click="deleteReply(comment)">X</button></li>
+            <li class="list-group-item" ng-show="reply.text">
+                <p>Reply Preview: {{ reply.text }}</p>
+            </li>
+            <li class="list-group-item">
+                <form ng-submit="addReply()">
+                    <div class="form-group row">
+                        <textarea class="col-6 form-control" ng-model="reply.text"></textarea>
+                    </div>
+                    <div class="from-group row">
+                        <button type="submit" ng-disabled="!reply.text" class="btn btn-light" value="save">Comment</button>
+                    </div>
+                    
+                </form>
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+
+</div>
