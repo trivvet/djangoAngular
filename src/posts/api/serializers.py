@@ -40,6 +40,7 @@ class PostDetailSerializer(ModelSerializer):
     class Meta:
         model = Post
         fields = (
+            'slug',
             'title', 
             'content', 
             'user', 

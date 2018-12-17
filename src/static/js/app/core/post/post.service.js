@@ -3,14 +3,17 @@
 angular.module('post').
     factory('Post', function($resource){
 
-        var url = '/static/json/posts.json';
+        var url = '/api/posts/';
 
         return $resource(url, {}, {
             query: {
                 method: "GET",
                 params: {},
                 isArray: true,
-                cache: true
+                cache: true,
+                transformResponse: function (data) {
+                    return angular.fromJson(data).results;
+                }
             },
             get: {
                 method: "GET",

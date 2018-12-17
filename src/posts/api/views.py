@@ -27,7 +27,12 @@ from .permissions import UserOwnerPermission
 class PostListAPIView(ListAPIView):
     serializer_class = PostListSerializer
     filter_backends = (SearchFilter, OrderingFilter)
-    search_fields = ('title', 'content', 'user__first_name', 'user__last_name')
+    search_fields = (
+        'title', 
+        'content', 
+        'user__first_name', 
+        'user__last_name'
+    )
     ordering_fields = ('title', 'content')
     pagination_class = PostPagePagination
     permission_classes = (AllowAny,)

@@ -3,7 +3,8 @@
 angular.module('blogList').
     component('someList', {
         templateUrl: "/api/templates/blog-list.html",
-        controller: function(Post, $location, $routeParams, $rootScope, $scope){
+        controller: function(Post, $location, 
+            $routeParams, $rootScope, $scope){
             if($routeParams.q) {
                 $scope.blogFilter = $routeParams.q;
                 $scope.searchHeader = true;
@@ -11,7 +12,8 @@ angular.module('blogList').
             $scope.ordering = '-publishedDate';
             $scope.goToItem = function(item) {
                 $rootScope.$apply(function() {
-                    $location.path('/blog/' + item.id);        
+                    $location.path('/posts/' + item.slug);
+                    console.log($location.path)
                 });
             }
 

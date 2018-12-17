@@ -4,12 +4,14 @@ angular.module('try').
     config(
         function(
             $locationProvider,
+            $resourceProvider,
             $routeProvider
             ){
 
             $locationProvider.html5Mode({
                 enabled: true
             });
+            $resourceProvider.defaults.stripTrailingSlashes = false;
             $routeProvider.
                 when("/", {
                     template: "<some-list></some-list>"

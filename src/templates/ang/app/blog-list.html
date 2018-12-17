@@ -19,7 +19,6 @@
                     </select>
                 </div>
             </div>
-            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="/api/templates/pagination.html" ng-hide="blogFilter.length > 0" pagination-id="listBlogs"></dir-pagination-controls>
         </form>
         <div class="card-columns">
             <div class="card" style: dir-paginate="item in items | orderBy: ordering | filter: blogFilter | itemsPerPage: 5 as postItems" pagination-id="listBlogs">
@@ -31,12 +30,13 @@
                     <a ng-href="/blog/{{ item.id }}" class="btn btn-primary">Detail</a>
                 </div>
             </div>
-
             <div ng-if="postItems.length == 0">
                 <span>Items not Found</span>
             </div>
         </div>
-        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="/api/templates/pagination.html" ng-hide="blogFilter.length > 0" pagination-id="listBlogs"></dir-pagination-controls>
+
+        
+        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="/api/templates/pagination.html" ng-hide="blogFilter.length > 0" ng-show="items" pagination-id="listBlogs"></dir-pagination-controls>
     </div>
 </div>
 
