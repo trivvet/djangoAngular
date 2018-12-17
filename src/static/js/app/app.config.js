@@ -22,7 +22,7 @@ angular.module('try').
                 when("/blog", {
                     template: "<some-list></some-list>"
                 }).
-                when("/blog/:id", {
+                when("/blog/:slug", {
                     template: "<blog-detail></blog-detail>"
                 }).
                 when("/405", {

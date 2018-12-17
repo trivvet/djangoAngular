@@ -13,7 +13,6 @@ angular.module('blogList').
             $scope.goToItem = function(item) {
                 $rootScope.$apply(function() {
                     $location.path('/posts/' + item.slug);
-                    console.log($location.path)
                 });
             }
 
@@ -25,10 +24,17 @@ angular.module('blogList').
                 }
                 setupColumns($scope.items, colNumber);
             }
-
+        
             function setupColumns(data, number) {
                 $scope.cssClass = 'col-sm-' + 12/number;
                 $scope.items = data;
+                var items = $scope.items;
+                for(var i=0; i < items.length; i++) {
+                    length = items[i].content.length;
+                    if (length > 120) {
+                        items[i].content = items[i].content.substring(0, 120);
+                    }
+                }
                 $scope.new_items = chunkArrayInGroups(data, number); 
             }
 

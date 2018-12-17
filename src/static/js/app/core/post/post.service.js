@@ -3,7 +3,7 @@
 angular.module('post').
     factory('Post', function($resource){
 
-        var url = '/api/posts/';
+        var url = '/api/posts/:slug/';
 
         return $resource(url, {}, {
             query: {
@@ -17,8 +17,9 @@ angular.module('post').
             },
             get: {
                 method: "GET",
-                isArray: true,
-                cache: true
+                params: {'slug': '@slug'},
+                isArray: false,
+                cache: false
             }
         });
 

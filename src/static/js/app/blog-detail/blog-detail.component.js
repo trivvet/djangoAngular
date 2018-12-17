@@ -4,11 +4,17 @@ angular.module('blogDetail').
     component('blogDetail', {
         templateUrl: '/api/templates/blog-detail.html',
         controller: function(Post, $location, $routeParams, $scope) {
-            
+            // Post.get({'slug': $routeParams.slug}, function(data) {   
+            //     console.log(data);
+            //     $scope.post = data;
+            //     $scope.notFound = false;
+            //     checkCommentsLength($scope.post.comments);
+            // })
+
             Post.query(function(data){
                 $scope.notFound = true;
                 data.forEach(function(post) {
-                    if (post.id == $routeParams.id) {
+                    if (post.slug == $routeParams.slug) {
                         $scope.post = post;
                         $scope.notFound = false;
                         checkCommentsLength($scope.post.comments);
