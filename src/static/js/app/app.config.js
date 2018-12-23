@@ -28,6 +28,12 @@ angular.module('try').
                 when("/405", {
                     template: "<h1>There is problems with Data Base</h1>"
                 }).
+                when("/login", {
+                    template: "<login-detail></login-detail>"
+                }).
+                when("/logout", {
+                    redirectTo: "/login"
+                }).
                 otherwise({
                     template: "<h1>Not Found</h1>"
                 })

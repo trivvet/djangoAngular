@@ -18,6 +18,7 @@ class PostListSerializer(ModelSerializer):
         view_name="posts-api:post_update",
         lookup_field='pk')
     user = AccountDetailSerializer(read_only=True)
+    image = SerializerMethodField()
 
     class Meta:
         model = Post
@@ -31,6 +32,12 @@ class PostListSerializer(ModelSerializer):
             'slug', 
             'publish'
         )
+
+    def get_image(self, obj):
+        if obj.image:
+            return obj.image.url
+        else:
+            return None
 
 class PostDetailSerializer(ModelSerializer):
     user = AccountDetailSerializer(read_only=True)

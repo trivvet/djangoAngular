@@ -6,10 +6,12 @@ angular.module('try', [
     'ngRoute',
     'angularUtils.directives.dirPagination',
     'ui.bootstrap',
+    'ngCookies',
 
     // internal
     'blogList',
     'blogDetail',
+    'loginDetail',
     'confirmClick',
     'tryNav'
 ]);

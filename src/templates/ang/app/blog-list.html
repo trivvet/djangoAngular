@@ -22,7 +22,7 @@
         </form>
         <div class="card-columns">
             <div class="card" style: dir-paginate="item in items | orderBy: ordering | filter: blogFilter | itemsPerPage: 5 as postItems" pagination-id="listBlogs">
-                <a ng-href="/blog/{{ item.id }}" ng-if="item.image"><img ng-if="item.image" style="max-height: 200px;" class="card-img-top" ng-src="{{ item.image }}" alt="Card image cap"></a>
+                <a ng-href="/blog/{{ item.slug }}" ng-if="item.image"><img ng-if="item.image" style="max-height: 200px;" class="card-img-top" ng-src="{{ item.image }}" alt="Card image cap"></a>
                 <div class="card-body">
                     <h5 class="card-title"><a ng-href="/blog/{{ item.slug }}">{{ item.title }}</a></h5>
                     <p class="card-text">{{ item.content }}</p>

@@ -14,5 +14,14 @@
             typeahead-on-select="selectItem($item, $model, $label)">
             <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
         </form>
+        <ul class="navbar-nav ml-3">
+            <li class="nav-item">
+                <a class="nav-link" ng-if="loggedIn" href="">{{ username }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" ng-hide="loggedIn" ng-href="/login">Login</a>
+                <a class="nav-link" ng-show="loggedIn" ng-href="/logout">Logout</a>
+            </li>
+        </ul>
     </div>
 </nav>
