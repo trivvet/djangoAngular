@@ -53,6 +53,7 @@ class PostDetailAPIView(RetrieveAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
     permission_classes = (AllowAny,)
+    lookup_field = 'slug'
 
 class PostCreateAPIView(CreateAPIView):
     queryset = Post.objects.all()

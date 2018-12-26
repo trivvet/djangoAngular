@@ -25,17 +25,17 @@
         <h4 ng-hide="commentsExist">Comments have not been created yet</h4>
         <ul class="list-group">
             <input type="text" ng-model="query" ng-show="commentsExist"placeholder="Filter Comments" />
-            <li class="list-group-item" ng-repeat="comment in post.comments | filter: query">{{ comment.text }}<button type="button" class="btn btn-danger btn-sm float-right" confirm-click confirmed-click="deleteReply(comment)">X</button></li>
-            <li class="list-group-item" ng-show="reply.text">
-                <p>Reply Preview: {{ reply.text }}</p>
+            <li class="list-group-item" ng-repeat="comment in comments | filter: query">{{ comment.content }}<button type="button" class="btn btn-danger btn-sm float-right" confirm-click confirmed-click="deleteReply(comment)">X</button></li>
+            <li class="list-group-item" ng-show="reply.content">
+                <p>Reply Preview: {{ reply.content }}</p>
             </li>
             <li class="list-group-item">
                 <form ng-submit="addReply()">
                     <div class="form-group row">
-                        <textarea class="col-6 form-control" ng-model="reply.text"></textarea>
+                        <textarea class="col-6 form-control" ng-model="reply.content"></textarea>
                     </div>
                     <div class="from-group row">
-                        <button type="submit" ng-disabled="!reply.text" class="btn btn-light" value="save">Comment</button>
+                        <button type="submit" ng-disabled="!reply.content" class="btn btn-light" value="save">Comment</button>
                     </div>
                     
                 </form>

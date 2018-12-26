@@ -13,10 +13,10 @@ from ..models import Post
 class PostListSerializer(ModelSerializer):
     url = HyperlinkedIdentityField(
         view_name='posts-api:post_detail',
-        lookup_field='pk')
+        lookup_field='slug')
     edit_url = HyperlinkedIdentityField(
         view_name="posts-api:post_update",
-        lookup_field='pk')
+        lookup_field='slug')
     user = AccountDetailSerializer(read_only=True)
     image = SerializerMethodField()
 

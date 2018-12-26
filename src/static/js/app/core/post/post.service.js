@@ -19,7 +19,7 @@ angular.module('post').
                 method: "GET",
                 params: {'slug': '@slug'},
                 isArray: false,
-                cache: false
+                cache: true,
             }
         });
 

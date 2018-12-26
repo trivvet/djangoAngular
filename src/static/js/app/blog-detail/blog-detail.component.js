@@ -3,38 +3,60 @@
 angular.module('blogDetail').
     component('blogDetail', {
         templateUrl: '/api/templates/blog-detail.html',
-        controller: function(Post, $location, $routeParams, $scope) {
-            // Post.get({'slug': $routeParams.slug}, function(data) {   
-            //     console.log(data);
-            //     $scope.post = data;
-            //     $scope.notFound = false;
-            //     checkCommentsLength($scope.post.comments);
-            // })
-
-            Post.query(function(data){
-                $scope.notFound = true;
-                data.forEach(function(post) {
-                    if (post.slug == $routeParams.slug) {
-                        $scope.post = post;
-                        $scope.notFound = false;
-                        checkCommentsLength($scope.post.comments);
-                    }
-                });
+        controller: function(
+            Post, 
+            $cookies, 
+            $http,
+            $location, 
+            $routeParams, 
+            $scope
+            ) {
+            var slug = $routeParams.slug;
+            var token = $cookies.get("token");
+            Post.get({'slug': slug}, function(data) {   
+                $scope.post = data;
+                $scope.notFound = false;
+                checkCommentsLength($scope.post.comments);
             });
 
             $scope.addReply = function() {
-                if ($scope.post.comments) {
-                    $scope.post.comments.push($scope.reply);
+                if (token) {
+                    var reqConfig = {
+                        method: "POST",
+                        url: "http://localhost:8000/api/comments/create/?slug=" + slug + "&type=post",
+                        data: {
+                            content: $scope.reply.content
+                        },
+                        headers: {
+                            authorization: "JWT " + token
+                        }
+                    } 
+                    var requestAction = $http(reqConfig);
+                    requestAction.success(
+                        function(r_data, r_status, r_headers, r_config) {
+                            if ($scope.comments) {
+                                $scope.comments.push($scope.reply);
+                            } else {
+                                $scope.comments = [$scope.reply, ];
+                            }
+                            resetReply($scope.comments);
+                         });
+
+                    requestAction.error(
+                        function(e_data, e_status, e_headers, e_config) {
+                           console.log(e_data); 
+                        });
+                    
                 } else {
-                    $scope.post.comments = [$scope.reply, ];
+                    console.log("No token");
                 }
-                resetReply($scope.post);
+                
             }
 
             $scope.deleteReply = function(comment) {
                 $scope.$apply(
-                    $scope.post.comments.splice(comment, 1),
-                    checkCommentsLength($scope.post.comments)
+                    $scope.comments.splice(comment, 1),
+                    checkCommentsLength($scope.comments)
                 );
                 
             }
@@ -42,22 +64,22 @@ angular.module('blogDetail').
             function checkCommentsLength(comments) {
                 if (comments && comments.length > 0) {
                     $scope.commentsExist = true;
+                    $scope.comments = comments;
                 } else {
                     $scope.commentsExist = false;
                 }
             }
 
-            function resetReply(post) {
+            function resetReply(comments) {
                 var length = 0;
-                if (post.comments) {
-                    length = post.comments.length + 1;
+                if (comments) {
+                    length = comments.length + 1;
                 } else {
                     length = 1;
                 }
                 $scope.commentsExist = true;
                 $scope.reply = {
-                    "id": length,
-                    "text": ""
+                    "content": ""
                 }
             }
 
