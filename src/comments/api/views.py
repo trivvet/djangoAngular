@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 
 from rest_framework.generics import (
@@ -18,8 +19,8 @@ from .pagination import CommentPagePagination
 from .serializers import (
     CommentListSerializer, 
     CommentDetailSerializer,
+    CommentCreateSerializer,
     CommentChildSerializer,
-    create_comment_serializer
     )
 
 class CommentListAPIView(ListAPIView):
@@ -34,7 +35,20 @@ class CommentListAPIView(ListAPIView):
     )
 
     def get_queryset(self, *args, **kwargs):
-        queryset_list = Comment.objects.all()
+        queryset_list = []
+        slug = self.request.GET.get("slug")
+        if slug:
+            model_type = self.request.GET.get("type", "post")
+            model_qs = ContentType.objects.filter(model=model_type)
+            if model_qs.exists():
+                SomeModel = model_qs.first().model_class()
+                obj_qs = SomeModel.objects.filter(slug=slug)
+                if obj_qs.exists():
+                    content_obj = obj_qs.first()
+                    queryset_list = Comment.objects.filter_by_instance(content_obj)
+
+        else:
+            queryset_list = Comment.objects.all()
         query = self.request.GET.get("q")
         if query:
             queryset_list = queryset_list.filter(
@@ -63,14 +77,10 @@ class CommentDetailAPIView(RetrieveAPIView, UpdateModelMixin, DestroyModelMixin)
 
 class CommentCreateAPIView(CreateAPIView):
     queryset = Comment.objects.all()
+    serializer_class = CommentCreateSerializer
+    permission_classes = (IsAuthenticated, )
 
-    def get_serializer_class(self):
-        model_type = self.request.GET.get("type")
-        slug = self.request.GET.get("slug")
-        parent_id = self.request.GET.get('parent_id', None)
-        return create_comment_serializer(
-            type=model_type, 
-            slug=slug, 
-            parent_id=parent_id,
-            user = self.request.user
-            )
+    def get_serializer_context(self):
+        context = super(CommentCreateAPIView, self).get_serializer_context()
+        context['user'] = self.request.user
+        return context

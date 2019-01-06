@@ -5,6 +5,7 @@ angular.module('blogDetail').
         templateUrl: '/api/templates/blog-detail.html',
         controller: function(
             Post, 
+            Comment,
             $cookies, 
             $http,
             $location, 
@@ -16,16 +17,22 @@ angular.module('blogDetail').
             Post.get({'slug': slug}, function(data) {   
                 $scope.post = data;
                 $scope.notFound = false;
-                checkCommentsLength($scope.post.comments);
+                Comment.query({"slug": slug, "type": "post"}, 
+                    function(commentData) {
+                    checkCommentsLength(commentData);
+                })
             });
+            
 
             $scope.addReply = function() {
                 if (token) {
                     var reqConfig = {
                         method: "POST",
-                        url: "http://localhost:8000/api/comments/create/?slug=" + slug + "&type=post",
+                        url: "http://localhost:8000/api/comments/create/",
                         data: {
-                            content: $scope.reply.content
+                            content: $scope.reply.content,
+                            model_type: "post",
+                            slug: slug
                         },
                         headers: {
                             authorization: "JWT " + token
@@ -34,6 +41,7 @@ angular.module('blogDetail').
                     var requestAction = $http(reqConfig);
                     requestAction.success(
                         function(r_data, r_status, r_headers, r_config) {
+                            console.log(r_status);
                             if ($scope.comments) {
                                 $scope.comments.push($scope.reply);
                             } else {

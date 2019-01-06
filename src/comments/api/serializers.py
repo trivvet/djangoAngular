@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db.utils import OperationalError
 from django.urls import reverse
 
+from rest_framework import serializers
 from rest_framework.serializers import (
     ModelSerializer,
     HyperlinkedIdentityField,
@@ -20,52 +21,54 @@ try:
 except OperationalError:
     user_for_comment = None
 
-def create_comment_serializer(type='post', 
-    slug=None, parent_id=None, user=user_for_comment):
-    class CommentCreateSerializer(ModelSerializer):
-        class Meta:
-            model = Comment
-            fields = (
-                'user',
-                'content',
-                'timestamp'
-                )
+class CommentCreateSerializer(ModelSerializer):
+    model_type = serializers.CharField(write_only=True)
+    slug = serializers.SlugField(write_only=True)
+    parent_id = serializers.IntegerField(required=False)
+    # user = user_for_comment
 
-        def __init__ (self, *args, **kwargs):
-            self.model_type = type
-            self.slug = slug
-            self.parent_obj = None
-            if parent_id:
-                parent_qs = Comment.objects.filter(id=parend_id)
-                if parent_qs.exists() and parent_qs.count() == 1:
-                    self.parent_obj = parent_qs.first()
+    class Meta:
+        model = Comment
+        fields = (
+            'user',
+            'content',
+            'model_type',
+            'slug',
+            'parent_id',
+            'timestamp'
+            )
 
-            return super(CommentCreateSerializer, self).__init__(
-                *args, **kwargs)
+    def validate(self, data):
+        model_type = data.get("model_type", "post")
+        model_qs = ContentType.objects.filter(model=model_type)
+        if not model_qs.exists() or model_qs.count() != 1:
+            raise ValidationError("This is not a valid content type")
+        SomeModel = model_qs.first().model_class()
+        slug = data.get("slug")
+        obj_qs = SomeModel.objects.filter(slug=slug)
+        if not obj_qs.exists() or obj_qs.count() != 1:
+            raise ValidationError("This slug is not valid for this content type")
+        parent_id = data.get("parent_id")
+        if parent_id:
+            parent_qs = Comment.objects.filter(id=parent_id)
+            if not parent_qs.exists() or parent_qs.count() != 1:
+                raise ValidationError(
+                    "This is not valid parent for this content")
+        return data
 
-        def validate(self, data):
-            model_type = self.model_type
-            model_qs = ContentType.objects.filter(model=model_type)
-            if not model_qs.exists() or model_qs.count() != 1:
-                raise ValidationError("This is not a valid content type")
-            SomeModel = model_qs.first().model_class()
-            obj_qs = SomeModel.objects.filter(slug=self.slug)
-            if not obj_qs.exists() or obj_qs.count() != 1:
-                raise ValidationError("This slug is not valid for this content type")
-            return data
-
-        def create(self, validated_data):
-            content = validated_data.get("content")
-            main_user = user
-            model_type = self.model_type
-            slug = self.slug
-            parent_obj = self.parent_obj
-            comment = Comment.objects.create_by_model_type(
-                model_type=model_type, slug=slug, content=content,
-                user=main_user, parent_obj=parent_obj)
-            return comment 
-
-    return CommentCreateSerializer
+    def create(self, validated_data):
+        content = validated_data.get("content")
+        main_user = self.context['user']
+        model_type = validated_data.get("model_type", "post")
+        slug = validated_data.get("slug")
+        parent_id = validated_data.get("parent_id")
+        parent_obj = None
+        if parent_id:
+            parent_obj = Comment.objects.filter(id=parent_id).first()
+        comment = Comment.objects.create_by_model_type(
+            model_type=model_type, slug=slug, content=content,
+            user=main_user, parent_obj=parent_obj)
+        return comment 
 
 class CommentSerializer(ModelSerializer):
     # children_list_url = HyperlinkedIdentityField(
