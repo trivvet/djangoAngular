@@ -4,7 +4,8 @@ from django.db.models import Q
 from rest_framework.generics import (
     ListAPIView,
     CreateAPIView,
-    RetrieveAPIView
+    RetrieveAPIView,
+    DestroyAPIView
     ) 
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
@@ -84,3 +85,8 @@ class CommentCreateAPIView(CreateAPIView):
         context = super(CommentCreateAPIView, self).get_serializer_context()
         context['user'] = self.request.user
         return context
+
+class CommentDestroyAPIView(DestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentDetailSerializer
+    permission_classes = (AllowAny, )

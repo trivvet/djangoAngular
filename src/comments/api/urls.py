@@ -4,7 +4,8 @@ from django.contrib import admin
 from .views import (
     CommentListAPIView,
     CommentCreateAPIView,
-    CommentDetailAPIView
+    CommentDetailAPIView,
+    CommentDestroyAPIView
     # CommentChildListAPIView
     )
 
@@ -18,4 +19,6 @@ urlpatterns = [
     url(r'^create/$', CommentCreateAPIView.as_view(),
         name='comment_create'),
     # url(r'^(?P<id>\d+)/delete/$', comment_delete, name='delete'),
+    url(r'^(?P<pk>\d+)/delete/$', CommentDestroyAPIView.as_view(), 
+        name='comment_delete'),
 ]

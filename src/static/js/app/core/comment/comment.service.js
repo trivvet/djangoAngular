@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('core.comment').
-    factory('Comment', function($resource){
+    factory('Comment', function($cookies, $resource){
 
         var url = '/api/comments/';
+        var token = $cookies.get("token");
         var commentQuery = {
             url: url,
             method: "GET",
@@ -25,10 +26,31 @@ angular.module('core.comment').
                 return angular.fromJson(data).results;
             }
         }
+        
+        var commentSave = {
+            url: url + "create/",
+            method: "POST",
+            params: {},
+        }
+
+        var commentDelete = {
+            url: url + ":id" + "/delete/",
+            method: "DELETE",
+            params: {'id': "@id"}
+        }
+
+        if (token) {
+            commentSave['headers'] = {authorization: "JWT " + token};
+            commentDelete['headers'] = {authorization: "JWT " + token};
+        } else {
+            console.log("No token");
+        }
 
         return $resource(url, {}, {
             query: commentQuery,
-            get: commentGet
+            get: commentGet,
+            save: commentSave,
+            delete: commentDelete
         });
 
     });

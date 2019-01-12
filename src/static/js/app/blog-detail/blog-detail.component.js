@@ -25,47 +25,34 @@ angular.module('blogDetail').
             
 
             $scope.addReply = function() {
-                if (token) {
-                    var reqConfig = {
-                        method: "POST",
-                        url: "http://localhost:8000/api/comments/create/",
-                        data: {
-                            content: $scope.reply.content,
-                            model_type: "post",
-                            slug: slug
-                        },
-                        headers: {
-                            authorization: "JWT " + token
+                Comment.save(
+                    {
+                        content: $scope.reply.content,
+                        model_type: "post",
+                        slug: slug
+                    }, function(data) {
+                        if ($scope.comments) {
+                            $scope.comments.push(data);
+                        } else {
+                            $scope.comments = [data, ];
                         }
-                    } 
-                    var requestAction = $http(reqConfig);
-                    requestAction.success(
-                        function(r_data, r_status, r_headers, r_config) {
-                            console.log(r_status);
-                            if ($scope.comments) {
-                                $scope.comments.push($scope.reply);
-                            } else {
-                                $scope.comments = [$scope.reply, ];
-                            }
-                            resetReply($scope.comments);
-                         });
-
-                    requestAction.error(
-                        function(e_data, e_status, e_headers, e_config) {
-                           console.log(e_data); 
-                        });
-                    
-                } else {
-                    console.log("No token");
-                }
-                
+                        resetReply($scope.comments);
+                    }, function(e_data) {
+                        console.log(e_data);
+                    }
+                )
             }
 
             $scope.deleteReply = function(comment) {
-                $scope.$apply(
-                    $scope.comments.splice(comment, 1),
-                    checkCommentsLength($scope.comments)
-                );
+                Comment.delete({'id': comment.id},
+                    function(data){
+                        console.log(data);
+                        var index = $scope.comments.indexOf(comment);
+                        $scope.comments.splice(index, 1),
+                        checkCommentsLength($scope.comments)
+                    }, function(e_data) {
+                        console.log(e_data)
+                    });
                 
             }
 
