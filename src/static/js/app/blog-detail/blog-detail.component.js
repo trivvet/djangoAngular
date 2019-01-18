@@ -32,7 +32,7 @@ angular.module('blogDetail').
                         slug: slug
                     }, function(data) {
                         if ($scope.comments) {
-                            $scope.comments.push(data);
+                            $scope.comments.unshift(data);
                         } else {
                             $scope.comments = [data, ];
                         }
@@ -43,10 +43,23 @@ angular.module('blogDetail').
                 )
             }
 
+            $scope.updateReply = function(comment) {
+                comment.$update(
+                    {
+                        id: comment.id,
+                        content: $scope.reply.content,
+                        model_type: "post",
+                        slug: slug
+                    }, function(data) {
+                    }, function(e_data) {
+                        console.log(e_data);
+                    }
+                )
+            }
+
             $scope.deleteReply = function(comment) {
-                Comment.delete({'id': comment.id},
+                comment.$delete({'id': comment.id},
                     function(data){
-                        console.log(data);
                         var index = $scope.comments.indexOf(comment);
                         $scope.comments.splice(index, 1),
                         checkCommentsLength($scope.comments)
@@ -66,12 +79,6 @@ angular.module('blogDetail').
             }
 
             function resetReply(comments) {
-                var length = 0;
-                if (comments) {
-                    length = comments.length + 1;
-                } else {
-                    length = 1;
-                }
                 $scope.commentsExist = true;
                 $scope.reply = {
                     "content": ""

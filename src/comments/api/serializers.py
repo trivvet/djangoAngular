@@ -31,6 +31,7 @@ class CommentCreateSerializer(ModelSerializer):
         model = Comment
         fields = (
             'user',
+            'id',
             'content',
             'model_type',
             'slug',

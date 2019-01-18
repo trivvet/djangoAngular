@@ -33,14 +33,21 @@ angular.module('core.comment').
             params: {},
         }
 
+        var commentUpdate = {
+            url: url + ":id/",
+            method: "PUT",
+            params: {'id': "@id"},
+        }
+
         var commentDelete = {
-            url: url + ":id" + "/delete/",
+            url: url + ":id/",
             method: "DELETE",
             params: {'id': "@id"}
         }
 
         if (token) {
             commentSave['headers'] = {authorization: "JWT " + token};
+            commentUpdate['headers'] = {authorization: "JWT " + token};
             commentDelete['headers'] = {authorization: "JWT " + token};
         } else {
             console.log("No token");
@@ -50,6 +57,7 @@ angular.module('core.comment').
             query: commentQuery,
             get: commentGet,
             save: commentSave,
+            update: commentUpdate,
             delete: commentDelete
         });
 

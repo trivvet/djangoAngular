@@ -67,7 +67,7 @@ class CommentListAPIView(ListAPIView):
 class CommentDetailAPIView(RetrieveAPIView, UpdateModelMixin, DestroyModelMixin):
     queryset = Comment.objects.filter(id__gte=0)
     serializer_class = CommentDetailSerializer
-    permission_classes = (AllowAny)
+    permission_classes = (AllowAny, )
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
