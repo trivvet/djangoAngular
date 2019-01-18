@@ -22,6 +22,15 @@ angular.module('blogDetail').
                     checkCommentsLength(commentData);
                 })
             });
+
+            $scope.showReply = function(comment) {
+                if (comment.show_reply) {
+                    comment.show_reply = false;
+                } else {
+                    comment.show_reply = true;
+                }
+                
+            }
             
 
             $scope.addReply = function() {

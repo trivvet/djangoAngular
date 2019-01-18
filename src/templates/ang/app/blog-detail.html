@@ -25,7 +25,26 @@
         <h4 ng-hide="commentsExist">Comments have not been created yet</h4>
         <ul class="list-group">
             <input type="text" ng-model="query" ng-show="commentsExist"placeholder="Filter Comments" />
-            <li class="list-group-item" ng-repeat="comment in comments | filter: query">{{ comment.content }}<button type="button" class="btn btn-danger btn-sm float-right" confirm-click confirmed-click="deleteReply(comment)">X</button></li>
+            <li class="list-group-item" ng-repeat="comment in comments | filter: query">
+                <span>{{ comment.content }}</span>
+                <footer>
+                    {{ comment.user }} <cite title="Source Title">{{ comment.timestamp }} ago</cite><span> | {{ comment.reply_count }} Comments</span> | <a href="" ng-click="showReply(comment)">Reply</a> | <a href="" confirm-click confirmed-click="deleteReply(comment)">Delete</a>
+                </footer>
+                <form ng-submit="addReply()" ng-show="comment.show_reply">
+                    <div class="form-group row">
+                        <textarea class="col-6 form-control" ng-model="reply.content"></textarea>
+                    </div>
+                    <div class="from-group row">
+                        <button type="submit" ng-disabled="!reply.content" class="btn btn-light" value="save">Comment</button>
+                    </div>
+                    
+                </form>
+            
+<!--  {% if comment.children %}{{ comment.children.count }} Comment{% if comment.children.count > 1 %}s{% endif %} | {% endif %}<a href="#" class="show-replies">Reply</a>{% if comment.children %} | <a href="{% url 'comments:thread' comment.id %}">Thread -->
+
+
+
+            </li>
             <li class="list-group-item" ng-show="reply.content">
                 <p>Reply Preview: {{ reply.content }}</p>
             </li>
