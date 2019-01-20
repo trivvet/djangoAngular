@@ -30,31 +30,34 @@
                 <footer>
                     {{ comment.user }} <cite title="Source Title">{{ comment.timestamp }} ago</cite><span> | {{ comment.reply_count }} Comments</span> | <a href="" ng-click="showReply(comment)">Reply</a> | <a href="" confirm-click confirmed-click="deleteReply(comment)">Delete</a>
                 </footer>
-                <form ng-submit="addReply()" ng-show="comment.show_reply">
-                    <div class="form-group row">
-                        <textarea class="col-6 form-control" ng-model="reply.content"></textarea>
-                    </div>
-                    <div class="from-group row">
-                        <button type="submit" ng-disabled="!reply.content" class="btn btn-light" value="save">Comment</button>
-                    </div>
-                    
-                </form>
+                <div class="col-6">
+                    <p style="color:red" ng-if="reply.content">Reply Preview: {{ reply.content }}</p>
+                    <form ng-submit="addCommentReply(reply, comment)" ng-show="comment.show_reply">
+                        <div class="form-group row">
+                            <textarea class="col-6 form-control" ng-model="reply.content"></textarea>
+                        </div>
+                        <div class="from-group row">
+                            <button type="submit" ng-disabled="!reply.content" class="btn btn-light" value="save">Reply</button>
+                        </div>
+                        
+                    </form>
+                </div>
             
 <!--  {% if comment.children %}{{ comment.children.count }} Comment{% if comment.children.count > 1 %}s{% endif %} | {% endif %}<a href="#" class="show-replies">Reply</a>{% if comment.children %} | <a href="{% url 'comments:thread' comment.id %}">Thread -->
 
 
 
             </li>
-            <li class="list-group-item" ng-show="reply.content">
-                <p>Reply Preview: {{ reply.content }}</p>
+            <li class="list-group-item" ng-show="newComment.content">
+                <p>Reply Preview: {{ newComment.content }}</p>
             </li>
             <li class="list-group-item">
-                <form ng-submit="addReply()">
+                <form ng-submit="addNewComment()">
                     <div class="form-group row">
-                        <textarea class="col-6 form-control" ng-model="reply.content"></textarea>
+                        <textarea class="col-6 form-control" ng-model="newComment.content"></textarea>
                     </div>
                     <div class="from-group row">
-                        <button type="submit" ng-disabled="!reply.content" class="btn btn-light" value="save">Comment</button>
+                        <button type="submit" ng-disabled="!newComment.content" class="btn btn-light" value="save">Comment</button>
                     </div>
                     
                 </form>

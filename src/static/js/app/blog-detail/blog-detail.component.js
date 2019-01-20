@@ -31,12 +31,27 @@ angular.module('blogDetail').
                 }
                 
             }
-            
-
-            $scope.addReply = function() {
+            $scope.addCommentReply = function(reply, parentComment) {
                 Comment.save(
                     {
-                        content: $scope.reply.content,
+                        content: reply.content,
+                        model_type: "post",
+                        slug: slug,
+                        parent_id: parentComment.id
+                    }, function(data) {
+                        parentComment.reply_count += 1;
+                        reply.content = "";
+                    }, function(e_data) {
+                        console.log(e_data);
+                    }
+                );
+
+            }
+
+            $scope.addNewComment = function() {
+                Comment.save(
+                    {
+                        content: $scope.newComment.content,
                         model_type: "post",
                         slug: slug
                     }, function(data) {
@@ -45,7 +60,7 @@ angular.module('blogDetail').
                         } else {
                             $scope.comments = [data, ];
                         }
-                        resetReply($scope.comments);
+                        resetNewComment($scope.comments);
                     }, function(e_data) {
                         console.log(e_data);
                     }
@@ -87,9 +102,9 @@ angular.module('blogDetail').
                 }
             }
 
-            function resetReply(comments) {
+            function resetNewComment(comments) {
                 $scope.commentsExist = true;
-                $scope.reply = {
+                $scope.newComment = {
                     "content": ""
                 }
             }
